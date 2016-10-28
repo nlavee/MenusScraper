@@ -65,5 +65,6 @@ sub matchesEmily {
             print $1 . "\n";
             $Emily = $';
         }  
+	last;
     }
 }
