@@ -19,10 +19,12 @@ rm links.txt
 ## sudo apt-get install poppler-utils
 
 for f in *.pdf; do
-  pdftotext -layout "$f"
+  pdftotext -enc UTF-8 -layout "$f"
 done
 
 # Remove unneeded pdf files
 rm *.pdf
+
+file -i *
 
 ./ScrapeDhall.pl
