@@ -4,6 +4,22 @@
 curl "https://www.skidmore.edu/diningservice/menus/" > menus.html
 grep -oh "\\/diningservice\/menus\/[Dinner|Lunch].*\.pdf\b" menus.html > links.txt
 
+## Get the academic calendars to figure out exact week in academic year
+## This will inform the Dinner/Lunch cycles
+mm=$(date +"%m")
+yy=$(date +"%y")
+[[ $mm < "08" ]] && yy=$(($yy - 1)) || yy=$yy
+
+curl "https://www.skidmore.edu/registrar/datesdeadlines.php" > calendars.html
+grep -oh "\\/registrar/documents/academiccalendar20$yy.*\.pdf\b" calendars.html > dates.txt
+
+#Get dates&deadlines for current year
+input="dates.txt"
+while IFS= read -r var
+do
+    curl -O "https://www.skidmore.edu$var"
+done < "$input"
+
 ## Go through each line and download the menu pdfs
 input="links.txt"
 while IFS= read -r var
@@ -12,8 +28,8 @@ do
 done < "$input"
 
 ## Remove unneeded textfiles
-rm menus.html
-rm links.txt
+rm menus.html calendars.html
+rm links.txt dates.txt
 
 # Install needed tools
 ## sudo apt-get install poppler-utils
