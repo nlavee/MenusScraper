@@ -8,7 +8,7 @@ print "\n=======================================================================
 
 my $debug = 1;
 
-my @array = `ls *.txt`;
+my @array = `ls resources/*.txt`;
 my %hash;
 foreach my $element(@array) {
     print $element if $debug;
