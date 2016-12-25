@@ -15,7 +15,7 @@ yy=$(date +"%y")
 curl "https://www.skidmore.edu/registrar/datesdeadlines.php" > calendars.html
 grep -oh "\\/registrar/documents/academiccalendar20$yy.*\.pdf\b" calendars.html > dates.txt
 
-#Get dates&deadlines for current year
+## Get dates&deadlines for current year
 input="dates.txt"
 while IFS= read -r var
 do
@@ -45,4 +45,4 @@ rm *.pdf
 file -i *
 
 cd .. && ./ScrapeDhall.pl
-rm -r resources
+## rm -r resources

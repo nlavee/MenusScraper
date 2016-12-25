@@ -6,9 +6,45 @@ print "\n=======================================================================
 print "\nHello there, seems like you want to know what's available in Dhall Today.\n";
 print "\n===============================================================================\n";
 
+## Find the current position on the cycle
+my $cal = `ls resources/academiccalendar2016.txt`;
+my $pattern = "(.*)Classes Begin";
+
+my $curr_date = `date +"%U"`;
+my $cycle;
+chomp $cal;
+
+{
+    open($STDIN, "<", $cal) or die ("Could not find academic calendar\n");
+    local $/;
+
+    my $line = <$STDIN>;
+
+    for (my $i = 0; $i < 2; $i++) {
+        if ($line =~ /^$pattern$/m) {
+        my $date_converted = `date -d '$1' '+%U'`;
+
+            if ($curr_date >= $date_converted){
+                $cycle = ($curr_date - $date_converted) % 4;
+
+                if($cycle == 0) {
+                    $cycle = 4;
+                }
+                last;
+            }
+        }
+        print "The cycle is equal to" . $cycle . "\n";
+        $line = $';
+    }
+    close $STDIN;
+}
+#TODO: Add a skip for Thanksgiving and Spring Break?
+
+`rm resources/academiccalendar2016.txt`;
+
 my $debug = 1;
 
-my @array = `ls resources/*.txt`;
+my @array = `find resources/ -regextype posix-extended -regex '(.*)(Cycle)$cycle(.*)'`;
 my %hash;
 foreach my $element(@array) {
     print $element if $debug;
