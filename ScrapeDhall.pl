@@ -22,7 +22,8 @@ chomp $cal;
 
     for (my $i = 0; $i < 2; $i++) {
         if ($line =~ /^$pattern$/m) {
-        my $date_converted = `date -d '$1' '+%U'`;
+            my $date_truncate = join ( ' ', split (/\s+/, $1) );
+            my $date_converted = `date -d '$date_truncate' '+%U'`;
 
             if ($curr_date >= $date_converted){
                 $cycle = ($curr_date - $date_converted) % 4;
@@ -33,14 +34,13 @@ chomp $cal;
                 last;
             }
         }
-        print "The cycle is equal to" . $cycle . "\n";
         $line = $';
     }
     close $STDIN;
 }
 #TODO: Add a skip for Thanksgiving and Spring Break?
 
-`rm resources/academiccalendar2016.txt`;
+# `rm resources/academiccalendar2016.txt`;
 
 my $debug = 1;
 
