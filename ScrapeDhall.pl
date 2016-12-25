@@ -7,14 +7,16 @@ print "\nHello there, seems like you want to know what's available in Dhall Toda
 print "\n===============================================================================\n";
 
 ## Find the current position on the cycle
-my $cal = `ls resources/academiccalendar2016.txt`;
-my $pattern = "(.*)Classes Begin";
 
-my $curr_date = `date +"%U"`;
 my $cycle;
-chomp $cal;
 
 {
+    my $cal = `ls resources/academiccalendar2016.txt`;
+    chomp $cal;
+
+    my $pattern = "(.*)Classes Begin";
+    my $curr_date = `date +"%U"`;
+
     open($STDIN, "<", $cal) or die ("Could not find academic calendar\n");
     local $/;
 
@@ -38,69 +40,71 @@ chomp $cal;
     }
     close $STDIN;
 }
-#TODO: Add a skip for Thanksgiving and Spring Break?
 
-# `rm resources/academiccalendar2016.txt`;
+my $curr_day = -7 + (`date +"%w"`+ 1);
+if ($curr_day == 7) {
+    $curr_day = -7;
+}
+#TODO: Add a skip for Thanksgiving and Spring Break?
 
 my $debug = 1;
 
 my @array = `find resources/ -regextype posix-extended -regex '(.*)(Cycle)$cycle(.*)'`;
 my %hash;
-foreach my $element(@array) {
-    print $element if $debug;
+foreach my $element(reverse (@array)) {
     chomp($element);
 
     open($STDIN, "<", $element) or die("Error opening file $element. Please double-check.\n");
     local $/;
     while(my $line = <$STDIN>) {
-        # Go through line by line
-        # print $line if $debug; 
-        &matches($line);
+            &matches($line);
     }
-
-    # print "\n===============================================================================\n";
-    # print "\nEND ONE FILE\n";
-    # print "\n===============================================================================\n";
-
     close $STDIN;
 }
 
 sub matches {
     my ($file) = @_;
-    my $Emily;
-    my $Diner;
-    my $Pasta;
-    my $Global;
+
+    if ($file =~ /LUNCH/) {
+        print "         Lunch\n";
+    } else {
+        print "         Dinner\n";
+    }
 
     # print $file if $debug;
-    if($file =~ /(Emily's\ Entr(.*))(THE\ DINER)/s) {
-        # print $1 . "\n" if $debug;
-        $Emily = $1;
+    if($file =~ /(Emily's\ Entrée's(\s*)(.*))(THE\ DINER)/s) {
+        
+        print "\n========================\n";
+        print "      Emily's Garden\n";
+        print "========================\n\n";
+        &output(split(/\n/m, $3));
     }
-    if($file =~ /(THE\ DINER(.*))(PASTA)/s) {
-        # print $1 . "\n" if $debug;
-        $Diner = $1;
+    if($file =~ /(THE\ DINER(\s*)(.*))(PASTA)/s) {
+        print "\n========================\n";
+        print "        The Diner\n";
+        print "========================\n\n";
+        &output(split(/\n/m, $3));
     }
-    if($file =~ /(PASTA(.*))(GLOBAL)/s) {
-        # print $1 . "\n" if $debug;
-        $Pasta = $1;
+    if($file =~ /(PASTA(\s*)(.*))(GLOBAL)/s) {
+        print "\n========================\n";
+        print "        Semolina's\n";
+        print "========================\n";
+        &output(split(/\n/m, $3));
     }
-    if($file =~ /(GLOBAL(.*))/s) {
-        # print $1 . "\n" if $debug;
-        $Global = $1;
+    if($file =~ /(GLOBAL(\s*)(.*))/s) {
+        print "\n========================\n";
+        print "        Global Cafe\n";
+        print "========================\n\n";
+        &output(split(/\n/m, $3));
     }
-
-    &matchesEmily($Emily);
-
+    print "\n~~~~~~~~~~~~~~~~~~~~~~~\n";
 }
 
-sub matchesEmily {
-    my ($Emily) = @_;
-    while(1) {
-        if($Emily =~ /()/) {
-            print $1 . "\n";
-            $Emily = $';
-        }  
-	last;
+sub output {
+        foreach my $s(@_) {
+            chomp $s;
+
+            my @select_day = split (/\s{2,34}/s, $s);
+            print $select_day[$curr_day] . "\n" unless $select_day[$curr_day] =~ m/^\s*$/m;
     }
 }
