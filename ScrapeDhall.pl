@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+# NOTE: CHECK FOR DEBUG OTHERWISE, THE VARIABLES ARE HARDCODED
+my $debug = 1;
+
 use strict;
 
 print "\n===============================================================================\n";
@@ -51,11 +54,13 @@ my $curr_day = -7 + (`date +"%w"`+ 1);
 if ($curr_day == 7) {
     $curr_day = -7;
 }
+
+
 #TODO: Add a skip for Thanksgiving and Spring Break?
 
 ## Parsing the menu according to cycle
-my $debug = 1;
-$cycle = 1 if $debug;
+$cycle = 2 if $debug;
+$curr_day = 5 if $debug;
 
 my @array = `find resources/ -regextype posix-extended -regex '(.*)(Cycle)$cycle(.*)'`;
 my %hash;
@@ -74,9 +79,9 @@ sub matches {
     my ($file) = @_;
 
     if ($file =~ /LUNCH/) {
-        print "         Lunch\n";
+        print "         LUNCH\n";
     } else {
-        print "         Dinner\n";
+        print "         DINNER\n";
     }
 
     # print $file if $debug;
@@ -91,7 +96,7 @@ sub matches {
         print "\n========================\n";
         print "        The Diner\n";
         print "========================\n\n";
-        &output(split(/\n/m, $3));
+        &outputDiner(split(/\n/m, $3));
     }
     if($file =~ /(PASTA(\s*)(.*))(GLOBAL)/s) {
         print "\n========================\n";
@@ -109,10 +114,55 @@ sub matches {
 }
 
 sub output {
+        my @arr = @_;
+        #print scalar @arr . "\n" if $debug; # Gives the number of items in the arrays given
+
+        my $count = 0;
         foreach my $s(@_) {
+            $count = $count + 1;
+            #print "Count: $count.\n" if $debug;
             chomp $s;
 
             my @select_day = split (/\s{2,34}/s, $s);
-            print $select_day[$curr_day] . "\n" unless $select_day[$curr_day] =~ m/^\s*$/m;
+
+            if($count > 1) {
+                print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day] =~ m/^\s*$/;
+            } else {
+                print $select_day[$curr_day] . "\n" unless $select_day[$curr_day] =~ m/^\s*$/;
+            }
+
+    }
+}
+
+# Specific parsing for diner due to it having extra information
+sub outputDiner {
+        my @arr = @_;
+        #print scalar @arr . "\n" if $debug; # Gives the number of items in the arrays given
+
+        my $count = 0;
+        foreach my $s(@_) {
+            $count = $count + 1;
+            #print "Count: $count.\n" if $debug;
+            chomp $s;
+
+            my @select_day = split (/\s{2,34}/s, $s);
+
+            # the following lines prints out what is in the array for each day
+#            print "Item:\n";
+#            foreach my $item(@select_day) {
+#                print $item . "\n"
+#            }
+#            print "Done\n";
+            #print "First Column: $select_day[0]" . "\n";
+
+            # Distinguishing between lines with "Entree" or "Signature Veggies" as the start instead of the actual dish
+            if($select_day[0] =~ "Entree #.") {
+                print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day + 1] =~ m/^\s*$/;
+            } elsif ($select_day[1] =~ "Entree #." || $select_day[1] =~ "Signature Veggies") {
+                print $select_day[$curr_day + 2] . "\n" unless $select_day[$curr_day + 2] =~ m/^\s*$/;
+            } else {
+                print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day + 1] =~ m/^\s*$/;
+            }
+
     }
 }
