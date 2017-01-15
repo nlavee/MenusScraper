@@ -59,8 +59,10 @@ if ($curr_day == 7) {
 #TODO: Add a skip for Thanksgiving and Spring Break?
 
 ## Parsing the menu according to cycle
+
+#NOTE: HARDCODED FOR PURPOSE OF TESTING
 $cycle = 2 if $debug;
-$curr_day = 5 if $debug;
+$curr_day = 5 if $debug; # THURSDAY
 
 my @array = `find resources/ -regextype posix-extended -regex '(.*)(Cycle)$cycle(.*)'`;
 my %hash;
@@ -90,25 +92,29 @@ sub matches {
         print "\n========================\n";
         print "      Emily's Garden\n";
         print "========================\n\n";
-        &output(split(/\n/m, $3));
+        my $emily = &output(split(/\n/m, $3));
+        print $emily;
     }
     if($file =~ /(THE\ DINER(\s*)(.*))(PASTA)/s) {
         print "\n========================\n";
         print "        The Diner\n";
         print "========================\n\n";
-        &outputDiner(split(/\n/m, $3));
+        my $diner = &outputDiner(split(/\n/m, $3));
+        print $diner;
     }
     if($file =~ /(PASTA(\s*)(.*))(GLOBAL)/s) {
         print "\n========================\n";
         print "        Semolina's\n";
         print "========================\n";
-        &output(split(/\n/m, $3));
+        my $pasta = &output(split(/\n/m, $3));
+        print $pasta;
     }
     if($file =~ /(GLOBAL(\s*)(.*))/s) {
         print "\n========================\n";
         print "        Global Cafe\n";
         print "========================\n\n";
-        &output(split(/\n/m, $3));
+        my $global = &output(split(/\n/m, $3));
+        print $global;
     }
     print "\n~~~~~~~~~~~~~~~~~~~~~~~\n";
 }
@@ -118,6 +124,7 @@ sub output {
         #print scalar @arr . "\n" if $debug; # Gives the number of items in the arrays given
 
         my $count = 0;
+        my $output;
         foreach my $s(@_) {
             $count = $count + 1;
             #print "Count: $count.\n" if $debug;
@@ -126,12 +133,14 @@ sub output {
             my @select_day = split (/\s{2,34}/s, $s);
 
             if($count > 1) {
-                print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day] =~ m/^\s*$/;
+                #print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day + 1] =~ m/^\s*$/;
+                $output = $output . "\n" . $select_day[$curr_day + 1] unless $select_day[$curr_day + 1] =~ m/^\s*$/;
             } else {
-                print $select_day[$curr_day] . "\n" unless $select_day[$curr_day] =~ m/^\s*$/;
+                #print $select_day[$curr_day] . "\n" unless $select_day[$curr_day] =~ m/^\s*$/;
+                $output = $output . "\n" . $select_day[$curr_day] unless $select_day[$curr_day] =~ m/^\s*$/;
             }
-
-    }
+        }
+        return $output;
 }
 
 # Specific parsing for diner due to it having extra information
@@ -140,6 +149,7 @@ sub outputDiner {
         #print scalar @arr . "\n" if $debug; # Gives the number of items in the arrays given
 
         my $count = 0;
+        my $output;
         foreach my $s(@_) {
             $count = $count + 1;
             #print "Count: $count.\n" if $debug;
@@ -157,12 +167,15 @@ sub outputDiner {
 
             # Distinguishing between lines with "Entree" or "Signature Veggies" as the start instead of the actual dish
             if($select_day[0] =~ "Entree #.") {
-                print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day + 1] =~ m/^\s*$/;
+                #print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day + 1] =~ m/^\s*$/;
+                $output = $output . "\n" . $select_day[$curr_day + 1] unless $select_day[$curr_day + 1] =~ m/^\s*$/;
             } elsif ($select_day[1] =~ "Entree #." || $select_day[1] =~ "Signature Veggies") {
-                print $select_day[$curr_day + 2] . "\n" unless $select_day[$curr_day + 2] =~ m/^\s*$/;
+                #print $select_day[$curr_day + 2] . "\n" unless $select_day[$curr_day + 2] =~ m/^\s*$/;
+                $output = $output . "\n" . $select_day[$curr_day + 2] unless $select_day[$curr_day + 2] =~ m/^\s*$/;
             } else {
-                print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day + 1] =~ m/^\s*$/;
+                #print $select_day[$curr_day + 1] . "\n" unless $select_day[$curr_day + 1] =~ m/^\s*$/;
+                $output = $output . "\n" . $select_day[$curr_day + 1] unless $select_day[$curr_day + 1] =~ m/^\s*$/;
             }
-
-    }
+        }
+        return $output;
 }
