@@ -12,6 +12,10 @@ Try the following line and then re-run DhallScraper.sh.
 sudo apt-get install poppler-utils
 ```
 
+###On virualenv  
+Due to problem with namespace (which include whitespace for me), I have to edit some scripts so that virtualenv and pip3 would run.  
+The problem can be found here: [https://github.com/pypa/virtualenv/issues/53](https://github.com/pypa/virtualenv/issues/53).  
+
 ##CONTRIBUTORS
 This project is currently being developed by:  
 Anh Vu Nguyen - @nlavee - anhvu.nguyenlam@gmail.com  
