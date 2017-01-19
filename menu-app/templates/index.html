@@ -1,45 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-	<title>Menu Application</title>
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-	<link rel="stylesheet" type="text/css" href="static/styles/dist/semantic.min.css">
-	<link rel="stylesheet" type="text/css" href="static/styles/dist/semantic.min.css">
-	<script src="static/styles/dist/semantic.min.js"></script>
+  <!-- Standard Meta -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <!-- Site Properties -->
+  <title>Homepage - Semantic</title>
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/reset.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/site.css">
+
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/container.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/grid.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/header.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/image.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/menu.css">
+
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/divider.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/dropdown.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/segment.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/button.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/list.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/icon.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/sidebar.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/dist/components/transition.css">
+  <link rel="stylesheet" type="text/css" href="static/styles/base.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="static/styles/dist/components/visibility.js"></script>
+  <script src="static/styles/dist/components/sidebar.js"></script>
+  <script src="static/styles/dist/components/transition.js"></script>
+  <script>
+  $(document)
+    .ready(function() {
+      // fix menu when passed
+      $('.masthead')
+        .visibility({
+          once: false,
+          onBottomPassed: function() {
+            $('.fixed.menu').transition('fade in');
+          },
+          onBottomPassedReverse: function() {
+            $('.fixed.menu').transition('fade out');
+          }
+        })
+      ;
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+        .sidebar('attach events', '.toc.item')
+      ;
+    })
+  ;
+  </script>
 </head>
 <body>
-	<div class="intro-index">
-		<h2 class="ui center aligned icon header">
-	<i class="circular users icon"></i>
-	Welcome to Menu Alert
-	</h2>
-	<h2 class="ui center aligned header">This tool aims at alerting you when a particular dish that you want to eat is available at Skidmore Dining Hall</h2>
-	
-	<div class="ui one column stackable center aligned page grid">
-		<div class="column twelve wide">
-			<button class="ui button">Continue</button>
-		</div>
-	</div>
-	</div>
-	<p></p>
-	<div class="ui horizontal divider">Contributors</div>
-	<div class="ui horizontal center aligned list">
-	<div class="item">
-			<img class="ui mini circular image" src="static/images/contributors/v.jpg">
-			<div class="content">
-			<div class="ui sub header">Vu</div>
-			Developer
-			</div>
-		</div>
-		<div class="item">
-			<img class="ui mini circular image" src="static/images/contributors/p.jpg">
-			<div class="content">
-			<div class="ui sub header">Giorgos</div>
-			Developer
-			</div>
-		</div>
-	</div>
+
+<!-- Following Menu -->
+<div class="ui large top fixed hidden menu">
+  <div class="ui container">
+    <a class="active item">Home</a>
+    <a class="item">About</a>
+    <a class="item">Contributing</a>
+    <a class="item">Help</a>
+    <div class="right menu">
+      <div class="item">
+        <a class="ui button">Log in</a>
+      </div>
+      <div class="item">
+        <a class="ui primary button">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar Menu -->
+<div class="ui vertical inverted sidebar menu">
+  <a class="active item">Home</a>
+  <a class="item">About</a>
+  <a class="item">Contributing</a>
+  <a class="item">Help</a>
+  <a class="item">Login</a>
+  <a class="item">Signup</a>
+</div>
+
+
+<!-- Page Contents -->
+<div class="pusher">
+  <div class="ui inverted vertical masthead center aligned segment">
+
+    <div class="ui container">
+      <div class="ui large secondary inverted pointing menu">
+        <a class="toc item">
+          <i class="sidebar icon"></i>
+        </a>
+        <a class="active item">Home</a>
+        <a class="item">About</a>
+        <a class="item">Contributing</a>
+        <a class="item">Help</a>
+        <div class="right item">
+          <a class="ui inverted button">Log in</a>
+          <a class="ui inverted button">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui text container">
+      <h1 class="ui inverted header">
+        Dhall Scraper
+      </h1>
+      <h2>Like to eat something in Dhall? Get notifications for it.</h2>
+      <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+    </div>
+
+  </div>
+
+  <div class="ui vertical stripe segment">
+    <div class="ui middle aligned stackable grid container">
+      <div class="row">
+        <div class="eight wide column">
+          <h3 class="ui header">We Help You Know Ahead</h3>
+          <p>It is extremely frustrating to get to Dhall and realize that your favorite food has been finished because it was a popular item. You can avoid it by knowing ahead of time what's being served. You can search for the current menu of the day.</p>
+          <h3 class="ui header">We Give You Notifications</h3>
+		  <p>Yes that's right, you can set notifications for certain keywords (like "beef", "marinated", "chicken"), and we'll send you notification when we see that an item of interest is being served that day.</p>
+        </div>
+        <div class="six wide right floated column">
+          <img src="static/images/dhall/dhall.jpg" class="ui large bordered rounded image">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
+
 </html>
